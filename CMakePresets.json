@@ -1,0 +1,28 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23
+  },
+  "configurePresets": [
+    {
+      "name": "vanilla",
+      "displayName": "Ninja + ARM-GCC + Debug",
+      "description": "vanilla build setting",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_MAKE_PROGRAM": "${sourceDir}/util/ninja-win/ninja.exe"
+      },
+      "toolchainFile": "${sourceDir}/cmake/RTKToolChain.cmake",
+      "binaryDir": "${sourceDir}/build/"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "vanilla",
+      "configurePreset": "vanilla",
+      "targets": "rts5911"
+    }
+  ]
+}
