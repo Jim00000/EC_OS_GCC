@@ -29,29 +29,39 @@ set(COMPILE_C_OPTIONS
     -Wextra
     -Wstack-usage=256)
 
-execute_process(
-  COMMAND git describe --tags
-  RESULT_VARIABLE result
-  OUTPUT_VARIABLE PROJECT_VERSION
-  ERROR_QUIET)
+if(Git_FOUND)
+  execute_process(
+    COMMAND git describe --tags
+    RESULT_VARIABLE result
+    OUTPUT_VARIABLE PROJECT_VERSION)
 
-string(REGEX REPLACE "\n$" "" PROJECT_VERSION "${PROJECT_VERSION}")
+  string(REGEX REPLACE "\n$" "" PROJECT_VERSION "${PROJECT_VERSION}")
+else()
+  set(PROJECT_VERSION "v0.1.0")
+endif()
 
-# set(PROJECT_VERSION "v1.8.5")
 # configure_file(${CMAKE_SOURCE_DIR}/src/system/Ver.c.in
 # ${CMAKE_BINARY_DIR}/generated/system/Ver.c)
 
 set(RTK_SRC
-    ${CMAKE_SOURCE_DIR}/src/chip/rts5911/reset.s
-    ${CMAKE_SOURCE_DIR}/src/chip/rts5911/crt0.s
-    ${CMAKE_SOURCE_DIR}/src/chip/rts5911/svc.s
-    ${CMAKE_SOURCE_DIR}/src/chip/rts5911/vector_table.c
+    ${CMAKE_SOURCE_DIR}/src/device/system.c
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/reset.s
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/crt0.s
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/svc.s
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/vector_table.c
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/system.c
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/driver/slow_timer.c
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/driver/i2c.c
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/driver/uart.c
+    ${CMAKE_SOURCE_DIR}/src/device/rts5911/driver/espi_virtual_wire.c
     ${CMAKE_SOURCE_DIR}/src/kernel/main.c
     ${CMAKE_SOURCE_DIR}/src/kernel/task.c
     ${CMAKE_SOURCE_DIR}/src/kernel/scheduler.c
     ${CMAKE_SOURCE_DIR}/src/kernel/thread.c
+    ${CMAKE_SOURCE_DIR}/src/kernel/malloc.c
     ${CMAKE_SOURCE_DIR}/src/debug/instrument.c
     ${CMAKE_SOURCE_DIR}/src/armv8m/init.c)
+
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/ldscripts/rts5911.ld)
 
 set_target_properties(rts5911 PROPERTIES LINK_DEPENDS ${LINKER_SCRIPT})
@@ -60,13 +70,11 @@ target_sources(rts5911 PUBLIC ${RTK_SRC})
 
 target_include_directories(rts5911 PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-target_compile_definitions(rts5911 PRIVATE 
-  "__RTS5911__"
-)
+target_compile_definitions(rts5911 PRIVATE "__RTS5911__" "__FPU_PRESENT=1")
 
 target_compile_options(rts5911 PRIVATE ${COMPILE_C_OPTIONS})
 
-# target_link_libraries (rts5911 m ${CMAKE_SOURCE_DIR}/Crypto/libcrypto.a)
+target_link_libraries(rts5911 m ${CMAKE_SOURCE_DIR}/Crypto/libcrypto.a)
 
 target_link_options(
   rts5911
@@ -136,3 +144,11 @@ add_custom_command(
   POST_BUILD DEPENDS "${CMAKE_BINARY_DIR}/${SIGN_BIN_FILE_NAME}"
   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/${SIGN_BIN_FILE_NAME}"
           "${CMAKE_BINARY_DIR}/${SIGN_BACKUP_BIN_FILE_NAME}")
+
+# Copy attach_debug.bat to build directory
+add_custom_command(
+  TARGET rts5911
+  POST_BUILD
+  COMMAND
+    ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/script/attach_debug.bat"
+    "${CMAKE_BINARY_DIR}/attach_debug.bat")

@@ -6,23 +6,52 @@
   },
   "configurePresets": [
     {
-      "name": "vanilla",
-      "displayName": "Ninja + ARM-GCC + Debug",
+      "name": "rts5911",
+      "displayName": "RTS5911-Debug",
       "description": "vanilla build setting",
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_MAKE_PROGRAM": "${sourceDir}/util/ninja-win/ninja.exe"
+        "CMAKE_MAKE_PROGRAM": "${sourceDir}/util/ninja-win/ninja.exe",
+        "EC_PROJECT": "RTS5911"
       },
       "toolchainFile": "${sourceDir}/cmake/RTKToolChain.cmake",
       "binaryDir": "${sourceDir}/build/"
+    },
+    {
+      "name": "rts5913",
+      "displayName": "RTS5913-Debug",
+      "inherits": "rts5911",
+      "cacheVariables": {
+        "EC_PROJECT": "RTS5913"
+      }
     }
   ],
   "buildPresets": [
     {
-      "name": "vanilla",
-      "configurePreset": "vanilla",
+      "name": "rts5911",
+      "configurePreset": "rts5911",
       "targets": "rts5911"
+    },
+    {
+      "name": "rts5913",
+      "configurePreset": "rts5913",
+      "targets": "rts5913"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "vanilla",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "default"
+        }
+      ]
     }
   ]
 }

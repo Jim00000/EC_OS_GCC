@@ -18,6 +18,7 @@ Reset_Handler:
                 /* Disable interrupts */
                 cpsid i
 
+                /* Setup stack & stack limit */
                 ldr     sp, =__StackTop
                 ldr     r0, =__StackLimit
                 msr     msplim, r0
@@ -25,13 +26,15 @@ Reset_Handler:
                 /* crt0 initialization */
                 bl      crt0_init
 
-                /* system init */
-                ldr     r0, =arm_system_init
-                blx     r0
+                /* Initialize ARM system */
+                bl      arm_system_init
 
-                /* enable interrupt */
+                /* Enable interrupts */
                 cpsie i
 
-                ldr     r0, =main
-                bx      r0
+                /* Jump to main function */
+                bl      main
+
+                /* context switch to first task */
+                svc     0
                 .size   Reset_Handler, . - Reset_Handler

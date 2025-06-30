@@ -1,4 +1,13 @@
-set(ARM_RTK_TOOLCHAINS C:/asdk-10.2.0/mingw32/newlib/bin)
+find_path (ARM_RTK_TOOLCHAINS 
+    NAMES arm-none-eabi-gcc-10.2.0.exe
+    PATHS C:/ D:/ ${CMAKE_SOURCE_DIR}
+    PATH_SUFFIXES asdk-10.2.0/mingw32/newlib/bin
+    REQUIRED
+    NO_CMAKE_PATH
+    NO_CMAKE_ENVIRONMENT_PATH
+    NO_SYSTEM_ENVIRONMENT_PATH
+    NO_CMAKE_SYSTEM_PATH
+)
 
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR arm)
@@ -11,7 +20,6 @@ set(CMAKE_LINKER ${ARM_RTK_TOOLCHAINS}/arm-none-eabi-gcc-ld.exe)
 set(CMAKE_AR ${ARM_RTK_TOOLCHAINS}/arm-none-eabi-gcc-ar.exe)
 set(CMAKE_OBJCOPY ${ARM_RTK_TOOLCHAINS}/arm-none-eabi-objcopy.exe)
 set(CMAKE_OBJDUMP ${ARM_RTK_TOOLCHAINS}/arm-none-eabi-objdump.exe)
-set(CMAKE_NM ${ARM_RTK_TOOLCHAINS}/arm-none-eabi-nm.exe)
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)

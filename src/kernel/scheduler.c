@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "armv8m/cmsis_gcc.h"
-#include "kernel/task.h"
 #include "kernel/scheduler.h"
+#include "kernel/task.h"
 
 #define MINHEAP_MAX_NODE (15U)
 
@@ -37,15 +37,10 @@ minheap_node_existed (heap_idx idx)
 size_t
 minheap_3way_minimum (heap_idx root, heap_idx left, heap_idx right)
 {
-  task_priority_t root_priority = minheap_impl[root].task != NULL
-                                      ? minheap_impl[root].task->priority
-                                      : 0xFFU;
-  task_priority_t left_priority = minheap_impl[left].task != NULL
-                                      ? minheap_impl[left].task->priority
-                                      : 0xFFU;
-  task_priority_t right_priority = minheap_impl[right].task != NULL
-                                       ? minheap_impl[right].task->priority
-                                       : 0xFFU;
+  task_priority_t root_priority = minheap_impl[root].task != NULL ? minheap_impl[root].task->priority : 0xFFU;
+  task_priority_t left_priority = minheap_impl[left].task != NULL ? minheap_impl[left].task->priority : 0xFFU;
+  task_priority_t right_priority
+      = minheap_impl[right].task != NULL ? minheap_impl[right].task->priority : 0xFFU;
 
   if (root_priority > left_priority)
     {
@@ -88,8 +83,7 @@ minheap_add_task (struct taskmeta *task)
   heap_idx idx = minheap_count;
 
   minheap_impl[minheap_count].task = task;
-  minheap_impl[minheap_count].task->priority
-      = minheap_impl[minheap_count].task->original_priority;
+  minheap_impl[minheap_count].task->priority = minheap_impl[minheap_count].task->original_priority;
   minheap_impl[minheap_count].task->pending = true;
   minheap_count++;
 
@@ -97,8 +91,7 @@ minheap_add_task (struct taskmeta *task)
     {
       heap_idx parent_idx = IS_ODD (idx) ? ((idx - 1) / 2) : ((idx / 2) - 1);
       // Swap parent & child if child is smaller
-      if (minheap_impl[idx].task->priority
-          < minheap_impl[parent_idx].task->priority)
+      if (minheap_impl[idx].task->priority < minheap_impl[parent_idx].task->priority)
         {
           minheap_swap_node (idx, parent_idx);
         }
@@ -117,8 +110,7 @@ minheap_do_heapify (heap_idx parent_idx)
   heap_idx right_child_idx = parent_idx * 2 + 2;
 
   // check if index of children overflows ?
-  if (left_child_idx >= MINHEAP_MAX_NODE
-      || right_child_idx >= MINHEAP_MAX_NODE)
+  if (left_child_idx >= MINHEAP_MAX_NODE || right_child_idx >= MINHEAP_MAX_NODE)
     return;
 
   switch (minheap_3way_minimum (parent_idx, left_child_idx, right_child_idx))

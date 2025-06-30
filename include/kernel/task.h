@@ -41,10 +41,10 @@ typedef enum
 
 extern struct taskmeta kernel_tasks[MAX_TASK];
 
-
-void scheduler_next_task();
+void scheduler_next_task ();
 void ERPMCEventHandler ();
-void ACPIEventHandler ();
+void task_acpi_parse_command_handler ();
+void task_acpi_parse_data_handler ();
 void KBCEventHandler ();
 void PMIO0EventHandler ();
 void PMIO1EventHandler ();

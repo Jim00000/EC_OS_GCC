@@ -30,7 +30,7 @@ crt0_init:
                 /* initialize bss section */
                 ldr     r0, =__bss_start__
                 ldr     r1, =__bss_end__
-                movs    r2, 0
+                eor     r2, r2
                 subs    r1, r0
 
 .crt0_clear_bss:
@@ -38,5 +38,5 @@ crt0_init:
                 str     r2, [r0, r1]
                 bgt     .crt0_clear_bss
 
-                bx lr
+                bx      lr
                 .size   crt0_init, . - crt0_init

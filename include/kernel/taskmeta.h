@@ -15,5 +15,5 @@ struct taskmeta
   task_priority_t original_priority;
   task_priority_t priority;
   bool pending;
-  TCB* tcb;
+  TCB *tcb;
 };

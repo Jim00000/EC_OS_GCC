@@ -2,10 +2,12 @@
 #include "kernel/scheduler.h"
 #include "kernel/task.h"
 
+os_runtime_info g_running_info = { 0 };
+
 void
 thread_init (TCB *restrict tcb, struct taskmeta *restrict meta)
 {
-  tcb->sp = (uint32_t)tcb->stack + sizeof (tcb->stack) - 64;
+  tcb->sp = (uint32_t)tcb->stack + tcb->stack_size - 64U;
   tcb->exc_return = 0xFFFFFFFDU;
   tcb->terminated = false;
   tcb->tid = meta->tid;

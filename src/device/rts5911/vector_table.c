@@ -512,7 +512,7 @@ void (*const g_vector_table[]) (void) = {
   0                    /*     240 Reserved                */
 };
 
-extern void* __VECTOR_TABLE __attribute__((alias("g_vector_table")));
+extern void *__VECTOR_TABLE __attribute__ ((alias ("g_vector_table")));
 
 __WEAK void
 NMI_Handler ()

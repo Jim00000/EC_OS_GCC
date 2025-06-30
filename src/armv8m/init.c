@@ -1,6 +1,6 @@
 #include "armv8m/init.h"
 #include "armv8m/cmsis_gcc.h"
-#include "chip/rts5911/RTS5911.h"
+#include "device/rts5911/RTS5911.h"
 #include <stdint.h>
 
 #define SYS_CLK_RC25M_DIV1 (25000000UL) /* From Internal RC25M DIV1 frequency */
@@ -30,7 +30,7 @@ arm_system_init ()
   SCB->CCR = SCB_CCR_BP_Msk | SCB_CCR_DIV_0_TRP_Msk | SCB_CCR_UNALIGN_TRP_Msk;
   SCB->SHCSR = SCB_SHCSR_MEMFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk | SCB_SHCSR_USGFAULTENA_Msk
                | SCB_SHCSR_SECUREFAULTENA_Msk;
-#if defined(FPU_USED)
+#if defined (__FPU_PRESENT) && (__FPU_PRESENT == 1U)
   // Full access to the FP Extension
   SCB->CPACR |= (SCB_CPACR_CP10_FULL_ACCESS | SCB_CPACR_CP11_FULL_ACCESS);
 #endif
@@ -38,9 +38,12 @@ arm_system_init ()
   CoreDebug->DEMCR |= CoreDebug_DEMCR_VC_HARDERR_Msk | DCB_DEMCR_VC_SFERR_Msk | DCB_DEMCR_VC_INTERR_Msk
                       | DCB_DEMCR_VC_BUSERR_Msk | DCB_DEMCR_VC_STATERR_Msk | DCB_DEMCR_VC_CHKERR_Msk
                       | DCB_DEMCR_VC_NOCPERR_Msk | DCB_DEMCR_VC_MMERR_Msk | DCB_DEMCR_VC_CORERESET_Msk;
+  
   for (uint8_t i = 0; i < 16U; i++)
     {
+      // Disable NVIC interrupt
       NVIC->ICER[i] = 0xFFFFFFFFU;
+      // Clear NVIC pending interrupt
       NVIC->ICPR[i] = 0xFFFFFFFFU;
     }
 }

@@ -1,15 +1,15 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
 
 #include "kernel/task.h"
 #include "kernel/taskmeta.h"
 
 typedef size_t heap_idx;
 
-bool cpu_dispatcher_check_task_pending(KERNEL_TASK_ID tid);
+bool cpu_dispatcher_check_task_pending (KERNEL_TASK_ID tid);
 
 void cpu_dispatcher_append_task (KERNEL_TASK_ID tid);
 

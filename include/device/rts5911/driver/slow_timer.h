@@ -1,0 +1,34 @@
+#pragma once
+
+#include <stdint.h>
+
+#include "armv8m/cmsis_gcc.h"
+#include "kernel/error_code.h"
+
+typedef enum
+{
+  SLOW_TIMER_CH_0,
+  SLOW_TIMER_CH_1,
+} SLOW_TIMER_CH;
+
+#define SLOW_TIMER_CTRL_TIMER_ENABLE (1U)
+#define SLOW_TIMER_CTRL_TIMER_DISABLE (0U)
+#define SLOW_TIMER_CTRL_TIMER_Pos (0U)
+#define SLOW_TIMER_CTRL_TIMER_ENABLE_Msk (SLOW_TIMER_CTRL_TIMER_ENABLE << SLOW_TIMER_CTRL_TIMER_Pos)
+#define SLOW_TIMER_CTRL_TIMER_DISABLE_Msk (SLOW_TIMER_CTRL_TIMER_ENABLE << SLOW_TIMER_CTRL_TIMER_Pos)
+#define SLOW_TIMER_CTRL_MODE_SINGLE_SHOT (0U)
+#define SLOW_TIMER_CTRL_MODE_CONTINUOUS (1U)
+#define SLOW_TIMER_CTRL_MODE_Pos (1U)
+#define SLOW_TIMER_CTRL_MODE_SINGLE_SHOT_Msk (SLOW_TIMER_CTRL_MODE_SINGLE_SHOT << SLOW_TIMER_CTRL_MODE_Pos)
+#define SLOW_TIMER_CTRL_MODE_CONTINUOUS_Msk (SLOW_TIMER_CTRL_MODE_CONTINUOUS << SLOW_TIMER_CTRL_MODE_Pos)
+#define SLOW_TIMER_CTRL_INTEN_EN (1U)
+#define SLOW_TIMER_CTRL_INTEN_Pos (2U)
+#define SLOW_TIMER_CTRL_INTEN_EN_Msk (SLOW_TIMER_CTRL_INTEN_EN << SLOW_TIMER_CTRL_INTEN_Pos)
+
+ec_error_t slow_timer_polling_delay_us (SLOW_TIMER_CH ch, uint32_t count);
+
+__STATIC_FORCEINLINE ec_error_t
+slow_timer_polling_delay_ms (SLOW_TIMER_CH ch, uint32_t count)
+{
+  return slow_timer_polling_delay_us (ch, count * 100);
+}

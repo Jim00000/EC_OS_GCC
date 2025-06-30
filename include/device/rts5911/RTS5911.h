@@ -295,7 +295,7 @@ typedef enum {
 /** @} */ /* End of group Configuration_of_CMSIS */
 
 #include "armv8m/core_armv8mml.h"               /*!< ARM ARMV8MML processor and core peripherals                               */
-#include "chip/rts5911/system_RTS5911.h"        /*!< RTS5911 System                                                            */
+#include "device/rts5911/system_RTS5911.h"      /*!< RTS5911 System                                                            */
 
 #ifndef __IM                                    /*!< Fallback for older CMSIS versions                                         */
   #define __IM   __I

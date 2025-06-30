@@ -1,0 +1,1 @@
+pyocd gdbserver --step-int -C all -O "rtos.enable=false" -M attach -t rts5911
